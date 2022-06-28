@@ -4,7 +4,7 @@ import App from "./App";
 import { createMemoryHistory, createBrowserHistory } from "history";
 
 // Mount function to start up the app
-const mount = (el, { onNavigate, defaultHistory, initialPath }) => {
+const mount = (el, { onNavigate, onSignIn, defaultHistory, initialPath }) => {
     const history = defaultHistory || createMemoryHistory({
         initialEntries: [initialPath]
     });
@@ -14,14 +14,14 @@ const mount = (el, { onNavigate, defaultHistory, initialPath }) => {
     }
 
     ReactDOM.render(
-        <App history={history} />,
+        <App history={history} onSignIn={onSignIn} />,
         el
     )
     return {
         onParentNavigate: ({ pathname: nextPathname }) => {
             const { pathname } = history.location
             console.log('Container just navigated')
-            console.log('location', location)
+            console.log('nextPathname', nextPathname)
             if (pathname !== nextPathname) {
                 history.push(nextPathname)
             }
@@ -32,7 +32,7 @@ const mount = (el, { onNavigate, defaultHistory, initialPath }) => {
 // If we are in development and in isolation,
 // call mount immediately
 if (process.env.NODE_ENV === 'development') {
-    const devRoot = document.querySelector('#_marketing-dev-root')
+    const devRoot = document.querySelector('#_auth-dev-root')
 
     if (devRoot) {
         mount(devRoot, { defaultHistory: createBrowserHistory()})
